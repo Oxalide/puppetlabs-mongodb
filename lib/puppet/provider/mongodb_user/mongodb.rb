@@ -10,12 +10,12 @@ Puppet::Type.type(:mongodb_user).provide(:mongodb, :parent => Puppet::Provider::
 
     if db_ismaster
       if mongo_24?
-        dbs = JSON.parse mongo_eval('printjson(db.getMongo().getDBs()["databases"].map(function(db){return db["name"]}))') || 'admin'
+        dbs = JSON.parse mongo_eval('printjson(db.getMongo().getDBs()["databases"].map(function(db){return db["name"]}))', nil, 1) || 'admin'
 
         allusers = []
 
         dbs.each do |db|
-          users = JSON.parse mongo_eval('printjson(db.system.users.find().toArray())', db)
+          users = JSON.parse mongo_eval('printjson(db.system.users.find().toArray())', db, 1)
 
           allusers += users.collect do |user|
               new(:name          => user['_id'],
@@ -28,7 +28,7 @@ Puppet::Type.type(:mongodb_user).provide(:mongodb, :parent => Puppet::Provider::
         end
         return allusers
       else
-        users = JSON.parse mongo_eval('printjson(db.system.users.find().toArray())')
+        users = JSON.parse mongo_eval('printjson(db.system.users.find().toArray())', nil, 1)
 
         users.collect do |user|
             new(:name          => user['_id'],
