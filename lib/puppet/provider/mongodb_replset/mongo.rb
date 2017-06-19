@@ -69,6 +69,24 @@ Puppet::Type.type(:mongodb_replset).provide(:mongo, :parent => Puppet::Provider:
   end
 
   def rs_initiate(conf, master)
+    # First check if we can call rs.initiate() on this node
+    master_ip = master.split(':').first
+    interfaces = Facter.value(:interfaces).split(',')
+    match_master = false
+    interfaces.each do |interface|
+        ipaddress = Facter.value("ipaddress_#{interface}")
+        if ipaddress == master_ip
+            match_master = true
+        end
+    end
+    if !match_master
+        # Node is not an eligible master, ignoring
+        hostname = Facter.value(:hostname)
+        Puppet.info "Igoring rs.initiate(#{conf}), #{hostname} is not the master node."
+        return
+    end
+
+    # Now we can safely call rs.initiate() on the master node
     if auth_enabled && auth_enabled != 'disabled'
       return mongo_command("rs.initiate(#{conf})", initialize_host)
     else
