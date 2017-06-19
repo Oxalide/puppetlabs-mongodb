@@ -131,9 +131,9 @@ class Puppet::Provider::Mongodb < Puppet::Provider
 
   def self.db_ismaster
     cmd_ismaster = 'db.isMaster().ismaster'
-    if mongorc_file
-      cmd_ismaster = mongorc_file + cmd_ismaster
-    end
+    #if mongorc_file
+    #  cmd_ismaster = mongorc_file + cmd_ismaster
+    #end
     db = 'admin'
     res = mongo_cmd(db, get_conn_string, cmd_ismaster).to_s.chomp()
     res.eql?('true') ? true : false
