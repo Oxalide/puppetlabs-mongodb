@@ -211,7 +211,7 @@ Puppet::Type.type(:mongodb_replset).provide(:mongo, :parent => Puppet::Provider:
           alive_hosts = alive_members(@property_flush[:members])
           dead_hosts  = @property_flush[:members] - alive_hosts
           if dead_hosts.empty?
-            return
+            break
           else
             Puppet.warning "All members are not ready yet, waiting for #{dead_hosts.inspect}"
             sleep retry_sleep
