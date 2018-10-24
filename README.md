@@ -434,6 +434,11 @@ class mongodb::server {
 }
 ```
 
+##### `config_data`
+A hash to allow for additional configuration options
+to be set in user-provided template.
+
+
 ##### `rest`
 Set to true to enable a simple REST interface. Default: false
 
@@ -550,6 +555,9 @@ Config content if the default doesn't match one needs.
 
 ##### `config_template`
 Path to the config template if the default doesn't match one needs.
+
+##### `config_data`
+Hash containing key-value pairs to allow for additional configuration options to be set in user-provided template.
 
 ##### `configdb`
 Array of the config servers IP addresses the mongos should connect to.
